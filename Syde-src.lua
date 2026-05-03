@@ -63,81 +63,7 @@ local textservice =     game:GetService('TextService')
 local coregui =         game:GetService("CoreGui")
 
 -- update check
-local update = false 
-
-if update then
-	local updategui = game:GetObjects("rbxassetid://122225389943465")[1]
-	updategui.Parent = coregui
-
-	local cord = "/GzumVvz3QM"
-
-	task.wait(0.5)
-	updategui.Enabled = true
-
-	updategui.main.BackgroundTransparency = 1
-	updategui.main.Size = UDim2.new(0, 150, 0, 150)
-	updategui.main.time.TextTransparency = 1
-	updategui.main.info.TextTransparency = 1
-	updategui.main.text.TextLabel.TextTransparency = 1
-	updategui.main.text.more.TextTransparency = 1
-
-	tweenservice:Create(updategui.main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { Transparency = 0 }):Play()
-	tweenservice:Create(updategui.main, TweenInfo.new(0.75, Enum.EasingStyle.Quart), { Size = UDim2.new(0, 350, 0, 230) }):Play()
-
-	task.wait(0.07)
-
-	tweenservice:Create(updategui.main.time, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 0 }):Play()
-	tweenservice:Create(updategui.main.info, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 0 }):Play()
-	task.wait(0.07)
-	tweenservice:Create(updategui.main.text.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 0 }):Play()
-	task.wait(0.07)
-	tweenservice:Create(updategui.main.text.more, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 0 }):Play()
-
-	local duration = 25
-	local startTime = tick()
-
-	local connection
-	connection = runservice.Heartbeat:Connect(function()
-		local elapsed = tick() - startTime
-		local remaining = math.max(duration - elapsed, 0)
-
-		updategui.main.time.Text = "Destroying in " .. string.format("%.1f", remaining) .. " secs"
-
-		if remaining <= 0 then
-			connection:Disconnect()
-
-			tweenservice:Create(updategui.main.text.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 1 }):Play()
-			task.wait(0.07)
-			tweenservice:Create(updategui.main.text.more, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 1 }):Play()
-			task.wait(0.2)
-			tweenservice:Create(updategui.main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { Transparency = 1 }):Play()
-			tweenservice:Create(updategui.main, TweenInfo.new(0.75, Enum.EasingStyle.Quart), { Size = UDim2.new(0, 150, 0, 130) }):Play()
-			updategui.main.s2.Visible = false
-
-			task.wait(0.07)
-			tweenservice:Create(updategui.main.time, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 1 }):Play()
-			tweenservice:Create(updategui.main.info, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), { TextTransparency = 1 }):Play()
-
-			task.wait(0.75)
-			updategui:Destroy()
-		end
-	end)
-
-	updategui.main.s2.interact.MouseButton1Click:Connect(function()
-		tweenservice:Create(updategui.main.s2.Frame.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quart), { Color = Color3.fromRGB(74, 255, 33) }):Play()
-		tweenservice:Create(updategui.main.s2.Frame.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quart), { Transparency = 0 }):Play()
-		task.wait(0.5)
-		tweenservice:Create(updategui.main.s2.Frame.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quart), { Color = Color3.fromRGB(87, 101, 242) }):Play()
-		tweenservice:Create(updategui.main.s2.Frame.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quart), { Transparency = 0.5 }):Play()
-		if setclipboard then
-			pcall(function()
-				setclipboard("https://discord.gg" .. cord)
-			end)
-		end
-	end)
-end
-
-if update then return end
+local update = false
 
 local Library =         game:GetObjects("rbxassetid://123800669522471")[1]
 local Loader =          game:GetObjects("rbxassetid://110221114597158")[1]
@@ -556,15 +482,6 @@ function syde:AddConnection(Type, Callback)
 			end
 		end
 	end
-
-	task.spawn(function()
-		task.wait(10)
-		for i = #syde.Connections, 1, -1 do
-			if not syde.Connections[i].Connection.Connected then
-				table.remove(syde.Connections, i)
-			end
-		end
-	end)
 
 	return Connection, Disconnect
 end
@@ -1118,25 +1035,16 @@ end
 function syde:updateLayout(container, spacing)
 	spacing = spacing or 5
 	local yOffset = 0
-	local containerWidth = container.AbsoluteSize.X 
-
-	for _, v in ipairs(container:GetChildren()) do
-		if v:IsA('UIListLayout') then
-			v:Destroy()
-		end
-	end
 
 	if resizing == false then
 		for _, child in ipairs(container:GetChildren()) do
+			if child:IsA("UIListLayout") then continue end
 			if (child:IsA("Frame") or child:IsA("ImageLabel") or child:IsA("TextLabel") or child:IsA("TextButton")) and child.Visible then
-				--child.Size = UDim2.new(1, -10, 0, child.Size.Y.Offset) -- Full width, fixed height
-				-- child.Position = UDim2.new(0, 0, 0, yOffset)
 				tweenservice:Create(child, TweenInfo.new(0.45, Enum.EasingStyle.Exponential), {Position = UDim2.new(0, 0, 0, yOffset)}):Play()
 				yOffset = yOffset + child.AbsoluteSize.Y + spacing
 			end
 		end
 	end
-
 
 	container.CanvasSize = UDim2.new(0, 0, 0, yOffset)
 end
@@ -1225,35 +1133,6 @@ function syde:AddDrag(Object, Main, ConstrainToParent)
 			dragging = false
 		end
 	end)
-end
-
-function syde:HidePlaceHolder(instance, placeholder, recursive)
-	if typeof(instance) ~= "Instance" or type(placeholder) ~= "string" then
-		warn("[removeplaceholder] Invalid input: Expected (Instance, string)")
-		return
-	end
-
-	local target = instance:FindFirstChild(placeholder)
-
-	if not target then
-		warn(("[removeplaceholder] Placeholder '%s' not found in instance '%s'"):format(placeholder, instance.Name))
-		return
-	end
-
-	if target:IsA("GuiObject") then
-		target.Visible = false
-	else
-		warn(("[removeplaceholder] '%s' is not a GuiObject and cannot be hidden"):format(placeholder))
-		return
-	end
-
-	if recursive then
-		for _, child in ipairs(target:GetDescendants()) do
-			if child:IsA("GuiObject") then
-				child.Visible = false
-			end
-		end
-	end
 end
 
 local rs
@@ -1588,75 +1467,6 @@ do
 			TweenWorkLabel(1,'rbxassetid://108012241529487', '')
 
 
-			if Config.AutoJoinDiscord and Config.AutoJoinDiscord.Enabled then
-				local discordConfig = Config.AutoJoinDiscord
-				local rootFolder = Config.ConfigurationSaving and Config.ConfigurationSaving.FolderName or "SydeSec"
-				local discordFolder = rootFolder .. "/DiscordInvites"
-				local inviteCode = discordConfig.Invite
-				local inviteFilePath = discordFolder .. "/" .. inviteCode .. ".txt"
-
-				warn("[SYDE] Discord AutoJoin enabled. Preparing to send invite:", inviteCode)
-
-				-- Ensure folder exists
-				if isfolder and not isfolder(discordFolder) then
-					local folderSuccess, folderErr = pcall(function()
-						makefolder(discordFolder)
-					end)
-					if folderSuccess then
-						print("[SYDE] Created DiscordInvites folder at:", discordFolder)
-					else
-						warn("[SYDE] Failed to create DiscordInvites folder:", folderErr)
-					end
-				end
-
-				local shouldPrompt = true
-				if isfile and discordConfig.RememberJoins and isfile(inviteFilePath) then
-					print("[SYDE] Discord invite '" .. inviteCode .. "' already joined. Skipping prompt.")
-					shouldPrompt = false
-				end
-
-				if shouldPrompt then
-					if request then
-						local reqSuccess, reqErr = pcall(function()
-							request({
-								Url = "http://127.0.0.1:6463/rpc?v=1",
-								Method = "POST",
-								Headers = {
-									["Content-Type"] = "application/json",
-									["Origin"] = "https://discord.com"
-								},
-								Body = https:JSONEncode({
-									cmd = "INVITE_BROWSER",
-									nonce = https:GenerateGUID(false),
-									args = {
-										code = inviteCode
-									}
-								})
-							})
-						end)
-
-						if reqSuccess then
-							print("[SYDE] Discord invite sent successfully to:", inviteCode)
-						else
-							warn("[SYDE] Failed to send Discord invite:", reqErr)
-						end
-					else
-						warn("[SYDE] Request function not available — cannot send Discord invite.")
-					end
-
-					if discordConfig.RememberJoins then
-						local writeSuccess, writeErr = pcall(function()
-							writefile(inviteFilePath, "Joined Discord via invite '" .. inviteCode .. "' at " .. os.date())
-						end)
-
-						if writeSuccess then
-							print("[SYDE] Logged Discord invite join for:", inviteCode)
-						else
-							warn("[SYDE] Failed to write join log for invite:", writeErr)
-						end
-					end
-				end
-			end
 
 			TweenWorkLabel(1,'rbxassetid://136405833725573', '')
 			task.wait(1)
@@ -11043,6 +10853,22 @@ local function applyMinihomeInfoTransparency()
 	return tbdata
 
 
+end
+
+
+function syde:Destroy()
+	-- Disconnect all tracked connections
+	for _, data in ipairs(syde.Connections) do
+		if data.Connection and data.Connection.Connected then
+			data.Connection:Disconnect()
+		end
+	end
+	syde.Connections = {}
+
+	-- Destroy the UI
+	pcall(function()
+		Library:Destroy()
+	end)
 end
 
 if __sydeOverrideResult then
